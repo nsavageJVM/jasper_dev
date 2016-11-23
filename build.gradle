@@ -1,0 +1,62 @@
+buildscript {
+    ext {
+        springBootVersion = '1.4.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+
+jar {
+    baseName = 'jaspdev'
+    version = '0.0.1'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}
+
+
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-logging')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+
+    compile('net.sf.jasperreports:jasperreports:6.0.3') {
+        exclude group: 'com.itextpdf'
+        exclude group: 'org.olap4j'
+    }
+
+    runtime 'com.itextpdf:itextpdf:5.5.0'
+    runtime 'com.itextpdf:itext-pdfa:5.5.0'
+
+    runtime'org.hsqldb:hsqldb'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('junit:junit:4.12')
+
+}
+
+
+task "create-dirs" << {
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
